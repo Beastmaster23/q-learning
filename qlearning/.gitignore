@@ -1,0 +1,11 @@
+
+# Vs studio 2022
+.vs
+.bin
+.obj
+.fake
+# Vs studio Code
+.vscode
+
+# Tests
+TestResults
