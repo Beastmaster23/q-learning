@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32929.385
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "qlearning", "qlearning.csproj", "{68980C79-218A-4BD8-87B8-0BA55CDF059A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QLearning-test", "..\QLearning-test\QLearning-test.csproj", "{A1AAA93B-515C-4DAC-9752-011137156909}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{68980C79-218A-4BD8-87B8-0BA55CDF059A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{68980C79-218A-4BD8-87B8-0BA55CDF059A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{68980C79-218A-4BD8-87B8-0BA55CDF059A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{68980C79-218A-4BD8-87B8-0BA55CDF059A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A1AAA93B-515C-4DAC-9752-011137156909}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A1AAA93B-515C-4DAC-9752-011137156909}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A1AAA93B-515C-4DAC-9752-011137156909}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A1AAA93B-515C-4DAC-9752-011137156909}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {407184EA-A7D6-4816-8E8A-2AA34DD91140}
+	EndGlobalSection
+EndGlobal
