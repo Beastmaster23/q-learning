@@ -12,7 +12,7 @@ namespace QLearning
 
 			// Create a new GridWorld
 			(int start_x, int start_y) start = (0, 0);
-			(int goal_x, int goal_y) goal = (3, 3);
+			(int goal_x, int goal_y) goal = (15, 15);
 			(int hole1_x, int hole1_y) hole1 = (1, 1);
 			GridWorld gridWorld = new GridWorld(16, goal, start, new (int, int)[]{hole1});
 			gridWorld.RandomGoal();
