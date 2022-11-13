@@ -9,7 +9,7 @@ namespace QLearning
 		private Random random = new Random();
 		private GridWorld gridWorld;
 		private double[][] qTable;
-		private double[][] states;
+		private ETable eTable;
 		private List<double> rewards;
 		private double learningRate;
 		private double discountFactor;
@@ -29,11 +29,10 @@ namespace QLearning
 			rewards = new List<double>();
 			int numStates = gridWorld.Size * gridWorld.Size;
 			int numActions = Enum.GetNames(typeof(Action)).Length;
-			qTable = new double[numStates][];
-			states = new double[numStates][];
+			qTable = new double[numStates][]; // Q(s,a)
+			eTable = new ETable(numStates); // Eligibility trace
 			for (int i = 0; i < numStates; i++){
 				qTable[i] = new double[numActions];
-				states[i] = new double[numActions];
 			}
 		}
 
@@ -44,23 +43,27 @@ namespace QLearning
 			}
 			// Choose the action with the highest Q-value
 			else{
-				double maxQ = double.MinValue;
-				Action bestAction = Action.Up;
-				foreach (Action action in Enum.GetValues(typeof(Action))){
-					double q = qTable[state][(int)action];
-					if (q > maxQ){
-						maxQ = q;
-						bestAction = action;
-					}
-				}
+				double maxQ = qTable[state].Max();
+				Action bestAction = (Action)Array.IndexOf(qTable[state], maxQ);
 				return bestAction;
 			}
 		}
 
 		public void UpdateQTable(int state, int nextState, double reward, Action action, Action nextAction){
 			double prediction = qTable[state][(int)action];
-			double target = reward + discountFactor * qTable[nextState][(int)nextAction];
-			qTable[state][(int)action] += learningRate * (target - prediction);
+			double target = qTable[nextState][(int)nextAction];
+			double deltas = reward + discountFactor * target - prediction;
+
+			// Update eligibility trace
+			eTable[state, action] += 1;
+
+			// Update Q-table
+			for (int i = 0; i < qTable.Length; i++){
+				for (int j = 0; j < qTable[i].Length; j++){
+					qTable[i][j] += learningRate * deltas * eTable[i,(Action)j];
+					eTable[i,(Action)j] *= discountFactor;
+				}
+			}
 		}
 
 		public void Train(int episodes, int maxSteps){
@@ -73,6 +76,7 @@ namespace QLearning
 			for (int i = 0; i < episodes; i++){
 				// Reset the environment
 				(int startX, int startY) = gridWorld.Reset();
+				eTable.Clear();
 				int state = gridWorld.GetStateFromPosition(startX, startY);
 				Action action = ChooseAction(state);
 				// Run the episode
@@ -145,7 +149,7 @@ namespace QLearning
 
 		// Getters and Setters
 		public double[][] QTable{get{return qTable;}}
-		public double[][] States{get{return states;}}
+		public ETable ETable{get{return eTable;}}
 		public List<double> Rewards{get{return rewards;}}
 		public double TotalReward{get{return totalReward;}}
 		public int TotalSteps{get{return totalSteps;}}

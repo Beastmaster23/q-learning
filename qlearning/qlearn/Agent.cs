@@ -44,7 +44,8 @@ namespace QLearning{
 			// Choose a random action
 			Array values = Enum.GetValues(typeof(Action));
 			Random random = new Random();
-			Action randomAction = (Action)values.GetValue(random.Next(values.Length));
+			int randomIndex = random.Next(values.Length);
+			Action randomAction = (Action?)values.GetValue(randomIndex) ?? Action.Up;
 			return randomAction;
 		}
 

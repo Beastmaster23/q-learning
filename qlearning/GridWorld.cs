@@ -37,6 +37,11 @@ namespace QLearning
             this.goal = goal;
             this.start = start;
             this.holes = holes;
+            grid = new ObjectType[size][];
+            for (int i = 0; i < size; i++)
+            {
+                grid[i] = new ObjectType[size];
+            }
             CreateGrid();
             agent = new Agent(start.Item1, start.Item2);
             rewardFunction = RewardFunction.MazeReward;
@@ -44,14 +49,21 @@ namespace QLearning
 
         public void CreateGrid(){
             grid = new ObjectType[size][];
-            for (int i = 0; i < size; i++){
+            for (int i = 0; i < size; i++)
+            {
                 grid[i] = new ObjectType[size];
-                for (int j = 0; j < size; j++){
+            }
+            for (int i = 0; i < size; i++)
+            {
+                for (int j = 0; j < size; j++)
+                {
                     grid[i][j] = ObjectType.Empty;
                 }
             }
             grid[goal.Item1][goal.Item2] = ObjectType.Goal;
-            foreach ((int, int) hole in holes){
+            grid[start.Item1][start.Item2] = ObjectType.Start;
+            foreach ((int, int) hole in holes)
+            {
                 grid[hole.Item1][hole.Item2] = ObjectType.Wall;
             }
         }
@@ -138,7 +150,58 @@ namespace QLearning
                 holes[i] = RandomPositionSafe(ObjectType.Empty);
                 grid[holes[i].Item1][holes[i].Item2] = ObjectType.Wall;
             }
+            // Check if there is a path from the start to the goal not recursively
+            while (!IsPath(start, goal)){
+                holes = new (int, int)[numHoles];
+                for (int i = 0; i < numHoles; i++){
+                    holes[i] = RandomPositionSafe(ObjectType.Empty);
+                    grid[holes[i].Item1][holes[i].Item2] = ObjectType.Wall;
+                }
+            }
         }
+
+        public bool IsPath((int, int) start, (int, int) goal){
+            // Create a copy of the grid
+            ObjectType[][] gridCopy = new ObjectType[size][];
+            for (int i = 0; i < size; i++){
+                gridCopy[i] = new ObjectType[size];
+                for (int j = 0; j < size; j++){
+                    gridCopy[i][j] = grid[i][j];
+                }
+            }
+            // Create a queue for the BFS
+            Queue<(int, int)> queue = new Queue<(int, int)>();
+            queue.Enqueue(start);
+            while (queue.Count > 0){
+                (int, int) current = queue.Dequeue();
+                // Check if we have reached the goal
+                if (current == goal){
+                    return true;
+                }
+                // Check if we can move up
+                if (current.Item1 > 0 && gridCopy[current.Item1 - 1][current.Item2] == ObjectType.Empty){
+                    queue.Enqueue((current.Item1 - 1, current.Item2));
+                    gridCopy[current.Item1 - 1][current.Item2] = ObjectType.Visited;
+                }
+                // Check if we can move down
+                if (current.Item1 < size - 1 && gridCopy[current.Item1 + 1][current.Item2] == ObjectType.Empty){
+                    queue.Enqueue((current.Item1 + 1, current.Item2));
+                    gridCopy[current.Item1 + 1][current.Item2] = ObjectType.Visited;
+                }
+                // Check if we can move left
+                if (current.Item2 > 0 && gridCopy[current.Item1][current.Item2 - 1] == ObjectType.Empty){
+                    queue.Enqueue((current.Item1, current.Item2 - 1));
+                    gridCopy[current.Item1][current.Item2 - 1] = ObjectType.Visited;
+                }
+                // Check if we can move right
+                if (current.Item2 < size - 1 && gridCopy[current.Item1][current.Item2 + 1] == ObjectType.Empty){
+                    queue.Enqueue((current.Item1, current.Item2 + 1));
+                    gridCopy[current.Item1][current.Item2 + 1] = ObjectType.Visited;
+                }
+            }
+            return false;
+        }
+
         public void Render(){
             for (int i = 0; i < size; i++){
                 for (int j = 0; j < size; j++){
@@ -211,6 +274,7 @@ namespace QLearning
         Wall,
         Goal,
         Agent,
-        Start
+        Start,
+        Visited
     }
 }

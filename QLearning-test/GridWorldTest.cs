@@ -6,6 +6,14 @@ namespace QLearning_test
     public class GridWorldTest
     {
         private GridWorld gridWorld;
+        public GridWorldTest()
+        {
+            (int, int) goal = (3, 3);
+            (int, int) start = (0, 0);
+            (int, int)[] holes = new (int, int)[]{	(1, 1),	};
+            
+            gridWorld = new GridWorld(4, goal, start, holes);
+        }
         [TestInitialize]
         public void Setup()
         {
